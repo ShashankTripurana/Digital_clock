@@ -1,0 +1,35 @@
+module tb_digital_clock_with_nanoseconds;
+reg clk;
+reg reset;
+wire [5:0] seconds;
+wire [5:0] minutes;
+wire [4:0] hours;
+wire [29:0] nanoseconds; 
+digital_clock_with_nanoseconds uut (
+ .clk(clk),
+ .reset(reset),
+ .seconds(seconds),
+ .minutes(minutes),
+ .hours(hours),
+ .nanoseconds(nanoseconds)
+);
+always #10 clk = ~clk; 
+initial begin
+ clk = 0;
+ reset = 1;
+ #100; 
+6
+ reset = 0;
+ repeat(1_000_000) #100; 
+ $finish;
+end
+initial begin
+ $display("Starting simulation...");
+ $monitor("At time %0t ns: Hours = %0d, Minutes = %0d, Seconds = %0d, Nanoseconds = %0d", $time, 
+hours, minutes, seconds, nanoseconds);
+End
+initial begin
+ $dumpfile("dump.vcd"); 
+ $dumpvars(0, tb_digital_clock_with_nanoseconds); 
+end
+endmodule
